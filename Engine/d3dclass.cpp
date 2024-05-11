@@ -1,4 +1,6 @@
 #include "d3dclass.h"
+#include <fstream>
+#include <iostream>
 
 D3DClass::D3DClass()
 {
