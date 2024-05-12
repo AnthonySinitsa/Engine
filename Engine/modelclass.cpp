@@ -86,10 +86,10 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 	vertices[0].color = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);
+	vertices[1].position = XMFLOAT3(-1.0f, 1.0f, 0.0f); // Top Left
 	vertices[1].color = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f);
+	vertices[2].position = XMFLOAT3(1.0f, 1.0f, 0.0f); // Top Right
 	vertices[2].color = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	vertices[3].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
