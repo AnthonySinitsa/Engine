@@ -145,10 +145,6 @@ bool ApplicationClass::Render()
 		return false;
 	}
 
-	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(1.0f, 1.0f, 0.0f, 1.0f);
-
-
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
 
