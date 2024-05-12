@@ -46,7 +46,6 @@ private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
-
 	TextureShaderClass* m_TextureShader;
 };
 

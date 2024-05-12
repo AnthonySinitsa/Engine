@@ -1,5 +1,6 @@
 #include "textureclass.h"
 
+
 TextureClass::TextureClass()
 {
 	m_targaData = 0;
@@ -17,14 +18,15 @@ TextureClass::~TextureClass()
 {
 }
 
+
 bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
 	bool result;
-	int height, width;
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT hResult;
 	unsigned int rowPitch;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+
 
 	// Load the targa image data into memory.
 	result = LoadTarga32Bit(filename);
@@ -82,6 +84,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	return true;
 }
 
+
 void TextureClass::Shutdown()
 {
 	// Release the texture view resource.
@@ -108,10 +111,12 @@ void TextureClass::Shutdown()
 	return;
 }
 
+
 ID3D11ShaderResourceView* TextureClass::GetTexture()
 {
 	return m_textureView;
 }
+
 
 bool TextureClass::LoadTarga32Bit(char* filename)
 {
