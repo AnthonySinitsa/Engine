@@ -68,7 +68,8 @@ void CameraClass::Render()
 	// Setup the position of the camera in the world.
 	position.x = m_positionX;
 	position.y = m_positionY;
-	position.z = m_positionZ - 10.0f;
+	position.z = m_positionZ;
+	// position.z = m_positionZ - 10.0f;
 
 	// Load it into a XMVECTOR structure.
 	positionVector = XMLoadFloat3(&position);
