@@ -54,7 +54,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Model = new ModelClass;
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "../Engine/data/stone01.tga");
+	strcpy_s(textureFilename, "../Engine/data/soil.tga");
 
 	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), textureFilename);
 	if (!result)
