@@ -6,3 +6,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 
 ![triangle](images/greenTriangle.png)
 ![square](images/redSquare.png)
+![triangleBrick](images/triangleBrick.png)

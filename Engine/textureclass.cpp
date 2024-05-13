@@ -83,6 +83,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	delete[] m_targaData;
 	m_targaData = 0;
 
+	OutputDebugStringA("TextureClass initialize returned true\n");
 	return true;
 }
 

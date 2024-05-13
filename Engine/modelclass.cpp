@@ -23,18 +23,15 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 {
 	bool result;
 
-	// Create an instance of ModelClass
-	ModelClass model;
-
 	// Initialize the vertex and index buffers.
-	result = model.InitializeBuffers(device);
+	result = InitializeBuffers(device);
 	if (!result)
 	{
 		return false;
 	}
 
 	// Load the texture for this model.
-	result = model.LoadTexture(device, deviceContext, textureFilename);
+	result = LoadTexture(device, deviceContext, textureFilename);
 	if (!result)
 	{
 		return false;
