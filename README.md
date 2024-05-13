@@ -8,3 +8,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![square](images/redSquare.png)
 ![triangleBrick](images/triangleBrick.png)
 ![squareBrick](images/squareBrick.png)
+![squareSpin](images/squareSpin.gif)
