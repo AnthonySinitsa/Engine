@@ -41,6 +41,7 @@ public:
 private:
 
     bool LoadTarga32Bit(char*);
+    bool LoadTarga24Bit(char*);
 
 private:
 
