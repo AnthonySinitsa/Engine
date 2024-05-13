@@ -52,6 +52,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	hResult = device->CreateTexture2D(&textureDesc, NULL, &m_texture);
 	if (FAILED(hResult))
 	{
+		OutputDebugStringA("Failed to create texture.\n");
 		return false;
 	}
 
@@ -71,6 +72,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	hResult = device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView);
 	if (FAILED(hResult))
 	{
+		OutputDebugStringA("Failed to create shader resource view.\n");
 		return false;
 	}
 
