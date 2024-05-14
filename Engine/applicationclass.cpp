@@ -51,7 +51,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "../Engine/data/cube.txt");
@@ -155,12 +155,10 @@ bool ApplicationClass::Frame()
 	return true;
 }
 
-
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix;
 	bool result;
-
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -173,8 +171,27 @@ bool ApplicationClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	worldMatrix = XMMatrixRotationY(rotation);
+	// Build the rotation matrix around the origin.
+	rotateMatrix = XMMatrixRotationY(rotation);
+
+	// Render the first object
+	translateMatrix = XMMatrixTranslation(-2.0f, 0.0f, 0.0f);  // Build the translation matrix.
+	worldMatrix = XMMatrixMultiply(translateMatrix, rotateMatrix);  // Combine rotation and translation
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
+		m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Render the second object
+	translateMatrix = XMMatrixTranslation(2.0f, 0.0f, 0.0f);  // Build the translation matrix.
+	worldMatrix = XMMatrixMultiply(translateMatrix, rotateMatrix);  // Combine rotation and translation
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
