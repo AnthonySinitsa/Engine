@@ -10,3 +10,5 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![squareBrick](images/squareBrick.png)
 ![squareSpin](images/squareSpin.gif)
 ![cubeSpin](images/cubeSpin.gif)
+![cubesRotate](images/cubesRotate.gif)
+![originRotate](images/originRotate.gif)
