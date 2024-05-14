@@ -155,10 +155,12 @@ bool ApplicationClass::Frame()
 	return true;
 }
 
+
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	bool result;
+
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -171,12 +173,11 @@ bool ApplicationClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Build the rotation matrix around the origin.
-	rotateMatrix = XMMatrixRotationY(rotation);
-
-	// Render the first object
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
 	translateMatrix = XMMatrixTranslation(-2.0f, 0.0f, 0.0f);  // Build the translation matrix.
-	worldMatrix = XMMatrixMultiply(translateMatrix, rotateMatrix);  // Combine rotation and translation
+
+	// Multiply them together to create the final world transformation matrix.
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
@@ -189,9 +190,13 @@ bool ApplicationClass::Render(float rotation)
 		return false;
 	}
 
-	// Render the second object
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
 	translateMatrix = XMMatrixTranslation(2.0f, 0.0f, 0.0f);  // Build the translation matrix.
-	worldMatrix = XMMatrixMultiply(translateMatrix, rotateMatrix);  // Combine rotation and translation
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
