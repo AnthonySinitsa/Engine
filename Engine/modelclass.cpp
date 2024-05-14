@@ -94,12 +94,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	HRESULT result;
 
 
-	// Set the number of vertices in the vertex array.
-	// m_vertexCount = 4;
-
-	// Set the number of indices in the index array.
-	// m_indexCount = 6;
-
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
 
@@ -115,14 +109,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 		indices[i] = i;
 	}
-
-	// Load the index array with data.
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top middle.
-	indices[2] = 2;  // Bottom right.
-	indices[3] = 0;  // Bottom left.
-	indices[4] = 2;  // Top right.
-	indices[5] = 3;  // Bottom right.
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
