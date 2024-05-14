@@ -24,6 +24,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 {
 	bool result;
 
+
 	// Load in the model data.
 	result = LoadModel(modelFilename);
 	if (!result)
@@ -92,6 +93,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
+	int i;
 
 
 	// Create the vertex array.
@@ -235,6 +237,7 @@ void ModelClass::ReleaseTexture()
 	return;
 }
 
+
 bool ModelClass::LoadModel(char* filename)
 {
 	ifstream fin;
@@ -289,6 +292,7 @@ bool ModelClass::LoadModel(char* filename)
 
 	return true;
 }
+
 
 void ModelClass::ReleaseModel()
 {
