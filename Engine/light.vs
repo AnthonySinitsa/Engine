@@ -18,12 +18,6 @@ cbuffer LightPositionBuffer
     float4 lightPosition[NUM_LIGHTS];
 };
 
-cbuffer CameraBuffer
-{
-    float3 cameraPosition;
-    float padding;
-};
-
 //////////////
 // TYPEDEFS //
 //////////////
@@ -73,9 +67,6 @@ PixelInputType LightVertexShader(VertexInputType input)
     // Calculate the position of the vertex in the world.
     worldPosition = mul(input.position, worldMatrix);
 
-    // Determine the viewing direction based on the position of the camera and the position of the vertex in the world.
-    output.viewDirection = cameraPosition.xyz - worldPosition.xyz;
-	
     for(i=0; i<NUM_LIGHTS; i++)
     {
         // Determine the light positions based on the position of the lights and the position of the vertex in the world.
