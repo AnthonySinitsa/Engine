@@ -443,7 +443,6 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr2->lightDirection = lightDirection;
     dataPtr2->specularColor = specularColor;
     dataPtr2->specularPower = specularPower;
-    dataPtr2->padding = 0.0f;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);
