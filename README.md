@@ -14,3 +14,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![originRotate](images/originRotate.gif)
 ![diffuseLight](images/diffuseLight.png)
 ![specularLight](images/specularLight.png)
+![pointLight](images/pointLight.png)
