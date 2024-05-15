@@ -10,9 +10,8 @@
 ///////////////////////
 #include "d3dclass.h"
 #include "cameraclass.h"
-#include "modelclass.h"
-#include "lightshaderclass.h"
-#include "lightclass.h"
+#include "textureshaderclass.h"
+#include "bitmapclass.h"
 
 
 /////////////
@@ -44,10 +43,8 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
-	LightShaderClass* m_LightShader;
-	LightClass* m_Lights;
-	int m_numLights;
+	TextureShaderClass* m_TextureShader;
+	BitmapClass* m_Bitmap;
 };
 
 #endif
