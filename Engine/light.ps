@@ -3,6 +3,7 @@
 /////////////
 #define NUM_LIGHTS 4
 
+
 /////////////
 // GLOBALS //
 /////////////
@@ -32,27 +33,27 @@ struct PixelInputType
 ////////////////////////////////////////////////////////////////////////////////
 float4 LightPixelShader(PixelInputType input) : SV_TARGET
 {
-    float4 textureColor;
-    float lightIntensity[NUM_LIGHTS];
-    float4 colorArray[NUM_LIGHTS];
-    float4 colorSum;
+	float4 textureColor;
+	float lightIntensity[NUM_LIGHTS];
+	float4 colorArray[NUM_LIGHTS];
+	float4 colorSum;
     float4 color;
-    int i;
+	int i;
 
 
-    // Sample the pixel color from the texture using the sampler at this texture coordinate location.
+	// Sample the texture pixel at this location.
     textureColor = shaderTexture.Sample(SampleType, input.tex);
 
-    for(i=0; i<NUM_LIGHTS; i++)
-    {
-        // Calculate the different amounts of light on this pixel based on the positions of the lights.
-        lightIntensity[i] = saturate(dot(input.normal, input.lightPos[i]));
+	for(i=0; i<NUM_LIGHTS; i++)
+	{
+		// Calculate the different amounts of light on this pixel based on the positions of the lights.
+		lightIntensity[i] = saturate(dot(input.normal, input.lightPos[i]));
 
-        // Determine the diffuse color amount of each of the four lights.
-        colorArray[i] = diffuseColor[i] * lightIntensity[i];
-    }
+		// Determine the diffuse color amount of each of the four lights.
+		colorArray[i] = diffuseColor[i] * lightIntensity[i];
+	}
 
-    // Initialize the sum of colors.
+	// Initialize the sum of colors.
     colorSum = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
     // Add all of the light colors up.
@@ -63,8 +64,8 @@ float4 LightPixelShader(PixelInputType input) : SV_TARGET
         colorSum.b += colorArray[i].b;
     }
 
-    // Multiply the texture pixel by the combination of all four light colors to get the final result.
+	// Multiply the texture pixel by the combination of all four light colors to get the final result.
     color = saturate(colorSum) * textureColor;
 
-    return color;
+	return color;
 }

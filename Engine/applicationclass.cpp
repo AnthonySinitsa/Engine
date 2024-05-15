@@ -6,7 +6,6 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_TextureShader = 0;
 	m_LightShader = 0;
 	m_Lights = 0;
 }
@@ -31,10 +30,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create and initialize the Direct3D object.
 	m_Direct3D = new D3DClass;
-	if (!m_Direct3D)
-	{
-		return false;
-	}
 
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result)
@@ -45,18 +40,15 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create the camera object.
 	m_Camera = new CameraClass;
-	if (!m_Camera)
-	{
-		return false;
-	}
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 2.0f, -12.0f);
+	m_Camera->Render();
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "../Engine/data/plane.txt");
 
-	// Set the name of the texture file that we will be loading.
+	// Set the file name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "../Engine/data/stone01.tga");
 
 	// Create and initialize the model object.
@@ -66,6 +58,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create and initialize the light shader object.
+	m_LightShader = new LightShaderClass;
+
+	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -138,18 +140,11 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame()
 {
-	static float rotation = 0.0f;
 	bool result;
 
-	// Update the rotation variable each frame.
-	rotation -= 0.0174532925f * 0.1f;
-	if (rotation < 0.0f)
-	{
-		rotation += 360.0f;
-	}
 
 	// Render the graphics scene.
-	result = Render(rotation);
+	result = Render();
 	if (!result)
 	{
 		return false;
@@ -158,7 +153,8 @@ bool ApplicationClass::Frame()
 	return true;
 }
 
-bool ApplicationClass::Render(float rotation)
+
+bool ApplicationClass::Render()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	XMFLOAT4 diffuseColor[4], lightPosition[4];
@@ -168,9 +164,6 @@ bool ApplicationClass::Render(float rotation)
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
