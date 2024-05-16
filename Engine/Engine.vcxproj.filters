@@ -75,6 +75,9 @@
     <ClCompile Include="fpsclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="multitextureshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -131,6 +134,9 @@
     <ClInclude Include="fpsclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="multitextureshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -155,6 +161,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="font.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="multitexture.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="multitexture.ps">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

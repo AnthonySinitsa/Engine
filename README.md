@@ -19,3 +19,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![sprite](images/sprite.gif)
 ![helloThere](images/helloThere.png)
 ![fps](images/fps.png)
+![2tex](images/2tex.png)
