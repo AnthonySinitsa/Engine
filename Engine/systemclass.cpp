@@ -1,11 +1,12 @@
 #include "systemclass.h"
 
-// Set object pointers to null
+
 SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Application = 0;
 }
+
 
 SystemClass::SystemClass(const SystemClass& other)
 {
@@ -17,9 +18,6 @@ SystemClass::~SystemClass()
 }
 
 
-
-// The following Initialize function does all the setup for the application. It first calls InitializeWindows which will create the window for our application to use. 
-// It also creates and initializes both the input and application objects that the application will use for handling user input and rendering graphics to the screen.
 bool SystemClass::Initialize()
 {
 	int screenWidth, screenHeight;
@@ -36,7 +34,11 @@ bool SystemClass::Initialize()
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
 
-	m_Input->Initialize();
+	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
 	m_Application = new ApplicationClass;
@@ -51,9 +53,6 @@ bool SystemClass::Initialize()
 }
 
 
-
-//The Shutdown function does the clean up. It shuts down and releases everything associated with the application and input object. 
-// As well it also shuts down the window and cleans up the handles associated with it.
 void SystemClass::Shutdown()
 {
 	// Release the application class object.
@@ -78,9 +77,6 @@ void SystemClass::Shutdown()
 }
 
 
-
-// The Run function is where our application will loop and do all the application processing until we decide to quit. 
-// The application processing is done in the Frame function which is called each loop. This is an important concept to understand as now the rest of our application must be written with this in mind.
 void SystemClass::Run()
 {
 	MSG msg;
@@ -115,29 +111,26 @@ void SystemClass::Run()
 				done = true;
 			}
 		}
-
 	}
 
 	return;
 }
 
 
-
-// The following Frame function is where all the processing for our application is done. So far it is fairly simple, we check the input object to see if the user has pressed escape and wants to quit. 
-// If they don't want to quit then we call the application class object to do its frame processing which will render the graphics for that frame.
 bool SystemClass::Frame()
 {
 	bool result;
 
 
-	// Check if the user pressed escape and wants to exit the application.
-	if (m_Input->IsKeyDown(VK_ESCAPE))
+	// Do the input frame processing.
+	result = m_Input->Frame();
+	if (!result)
 	{
 		return false;
 	}
 
 	// Do the frame processing for the application class object.
-	result = m_Application->Frame();
+	result = m_Application->Frame(m_Input);
 	if (!result)
 	{
 		return false;
@@ -147,49 +140,12 @@ bool SystemClass::Frame()
 }
 
 
-
-// The MessageHandler function is where we direct the windows system messages into. 
-// This way we can listen for certain information that we are interested in. 
-// Currently we will just read if a key is pressed or if a key is released and pass that information on to the input object.
-//  All other information we will pass back to the windows default message handler.
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	switch(umsg)
-	{
-		// Check if a key has been pressed on the keyboard.
-		case WM_KEYDOWN:
-		{
-			// If a key is pressed send it to the input object so it can record that state.
-			m_Input->KeyDown((unsigned int)wparam);
-			return 0;
-		}
-
-		// Check if a key has been released on the keyboard.
-		case WM_KEYUP:
-		{
-			// If a key is released then send it to the input object so it can unset the state for that key.
-			m_Input->KeyUp((unsigned int)wparam);
-			return 0;
-		}
-
-		// Any other messages send to the default message handler as our application won't make use of them.
-		default:
-		{
-			return DefWindowProc(hwnd, umsg, wparam, lparam);
-		}
-	}
+	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
 
-
-// The InitializeWindows function is where we put the code to build the window we will use to render to. 
-// It returns screenWidth and screenHeight back to the calling function so we can make use of them throughout the application.
-// We create the window using some default settings to initialize a plain black window with no borders. 
-// The function will make either a small window or make a full screen window depending on a global variable called FULL_SCREEN. 
-// If this is set to true then we make the screen cover the entire user's desktop window. 
-// If it is set to false, we just make an 800x600 window in the middle of the screen. 
-// I placed the FULL_SCREEN global variable at the top of the applicationclass.h file in case you want to modify it. 
-// It will make sense later why I placed the global in that file instead of the header for this file.
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX wc;
@@ -272,8 +228,6 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 }
 
 
-
-// ShutdownWindows does just that. It returns the screen settings back to normal and releases the window and the handles associated with it.
 void SystemClass::ShutdownWindows()
 {
 	// Show the mouse cursor.
@@ -300,33 +254,28 @@ void SystemClass::ShutdownWindows()
 }
 
 
-
-// The WndProc function is where windows sends its messages to. 
-// You'll notice we tell windows the name of it when we initialize the window class with wc.lpfnWndProc = WndProc in the InitializeWindows function above. 
-// I included it in this class file since we tie it directly into the system class by having it send all the messages to the MessageHandler function defined inside SystemClass. 
-// This allows us to hook the messaging functionality straight into our class and keep the code clean.
 LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
 	{
 		// Check if the window is being destroyed.
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 
-		// Check if the window is being closed.
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+	// Check if the window is being closed.
+	case WM_CLOSE:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
 
-		// All other messages pass to the message handler in the system class.
-		default:
-		{
-			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-		}
+	// All other messages pass to the message handler in the system class.
+	default:
+	{
+		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+	}
 	}
 }
