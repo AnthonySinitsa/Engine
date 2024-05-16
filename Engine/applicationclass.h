@@ -10,9 +10,10 @@
 ///////////////////////
 #include "d3dclass.h"
 #include "cameraclass.h"
-#include "textureshaderclass.h"
-#include "bitmapclass.h"
-
+#include "fontshaderclass.h"
+#include "fontclass.h"
+#include "textclass.h"
+#include "fpsclass.h"
 
 /////////////
 // GLOBALS //
@@ -39,12 +40,16 @@ public:
 
 private:
 	bool Render();
+	bool UpdateFps();
 
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	TextureShaderClass* m_TextureShader;
-	BitmapClass* m_Bitmap;
+	FontShaderClass* m_FontShader;
+	FontClass* m_Font;
+	FpsClass* m_Fps;
+	TextClass* m_FpsString;
+	int m_previousFps;
 };
 
 #endif
