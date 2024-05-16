@@ -11,7 +11,7 @@
 #include "d3dclass.h"
 #include "inputclass.h"
 #include "cameraclass.h"
-#include "multitextureshaderclass.h"
+#include "lightmapshaderclass.h"
 #include "modelclass.h"
 
 /////////////
@@ -44,7 +44,7 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	MultiTextureShaderClass* m_MultiTextureShader;
+	LightMapShaderClass* m_LightMapShader;
 	ModelClass* m_Model;
 };
 
