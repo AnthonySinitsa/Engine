@@ -16,3 +16,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![specularLight](images/specularLight.png)
 ![pointLight](images/pointLight.png)
 ![2dstone](images/2dstone.png)
+![sprite](images/sprite.gif)

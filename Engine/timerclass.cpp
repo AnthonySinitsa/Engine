@@ -43,7 +43,7 @@ void TimerClass::Frame()
 
 
     // Query the current time.
-    QueryPerformanceCounter((LARGE_INTEGER*)¤tTime);
+    QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 
     // Calculate the difference in time since the last time we queried for the current time.
     elapsedTicks = currentTime - m_startTime;
