@@ -10,9 +10,9 @@
 ///////////////////////
 #include "d3dclass.h"
 #include "cameraclass.h"
-#include "textureshaderclass.h"
-#include "spriteclass.h"
-#include "timerclass.h"
+#include "fontshaderclass.h"
+#include "fontclass.h"
+#include "textclass.h"
 
 /////////////
 // GLOBALS //
@@ -43,9 +43,9 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	TextureShaderClass* m_TextureShader;
-	SpriteClass* m_Sprite;
-	TimerClass* m_Timer;
+	FontShaderClass* m_FontShader;
+	FontClass* m_Font;
+	TextClass* m_TextString1, * m_TextString2;
 };
 
 #endif
