@@ -78,6 +78,9 @@
     <ClCompile Include="multitextureshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="lightmapshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -137,6 +140,9 @@
     <ClInclude Include="multitextureshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lightmapshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -167,6 +173,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="multitexture.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lightmap.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lightmap.ps">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -20,3 +20,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![helloThere](images/helloThere.png)
 ![fps](images/fps.png)
 ![2tex](images/2tex.png)
+![lighmap](images/lightmap.png)
