@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="alphamapshaderclass.cpp" />
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
@@ -42,6 +43,7 @@
     <ClCompile Include="timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alphamapshaderclass.h" />
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="cameraclass.h" />
@@ -64,6 +66,8 @@
     <ClInclude Include="timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="alphamap.ps" />
+    <None Include="alphamap.vs" />
     <None Include="color.ps" />
     <None Include="color.vs" />
     <None Include="font.ps" />
