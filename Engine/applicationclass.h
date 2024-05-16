@@ -9,11 +9,12 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "d3dclass.h"
+#include "inputclass.h"
 #include "cameraclass.h"
 #include "fontshaderclass.h"
 #include "fontclass.h"
 #include "textclass.h"
-#include "fpsclass.h"
+
 
 /////////////
 // GLOBALS //
@@ -36,20 +37,18 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame();
+	bool Frame(InputClass*);
 
 private:
 	bool Render();
-	bool UpdateFps();
+	bool UpdateMouseStrings(int, int, bool);
 
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
-	FpsClass* m_Fps;
-	TextClass* m_FpsString;
-	int m_previousFps;
+	TextClass* m_MouseStrings;
 };
 
 #endif
