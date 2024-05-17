@@ -23,3 +23,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![lighmap](images/lightmap.png)
 ![alphamap](images/alphamap.png)
 ![normalmap](images/normalmap.png)
+![specular](images/specular.png)

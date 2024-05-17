@@ -36,6 +36,7 @@
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
+    <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="spriteclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="textclass.cpp" />
@@ -60,6 +61,7 @@
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
+    <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="spriteclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textclass.h" />
@@ -82,6 +84,8 @@
     <None Include="multitexture.vs" />
     <None Include="normalmap.ps" />
     <None Include="normalmap.vs" />
+    <None Include="specmap.ps" />
+    <None Include="specmap.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
   </ItemGroup>
