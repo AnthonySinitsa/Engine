@@ -1,10 +1,11 @@
 #include "shadermanagerclass.h"
 
+
 ShaderManagerClass::ShaderManagerClass()
 {
-    m_TextureShader = 0;
-    m_LightShader = 0;
-    m_NormalMapShader = 0;
+	m_TextureShader = 0;
+	m_LightShader = 0;
+	m_NormalMapShader = 0;
 }
 
 
@@ -20,110 +21,119 @@ ShaderManagerClass::~ShaderManagerClass()
 
 bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    bool result;
+	bool result;
 
-    // Create and initialize the texture shader object.
-    m_TextureShader = new TextureShaderClass;
 
-    result = m_TextureShader->Initialize(device, hwnd);
-    if (!result)
-    {
-        return false;
-    }
+	// Create and initialize the texture shader object.
+	m_TextureShader = new TextureShaderClass;
 
-    // Create and initialize the light shader object.
-    m_LightShader = new LightShaderClass;
+	result = m_TextureShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
 
-    result = m_LightShader->Initialize(device, hwnd);
-    if (!result)
-    {
-        return false;
-    }
+	// Create and initialize the light shader object.
+	m_LightShader = new LightShaderClass;
 
-    // Create and initialize the normal map shader object.
-    m_NormalMapShader = new NormalMapShaderClass;
+	result = m_LightShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
 
-    result = m_NormalMapShader->Initialize(device, hwnd);
-    if (!result)
-    {
-        return false;
-    }
+	// Create and initialize the normal map shader object.
+	m_NormalMapShader = new NormalMapShaderClass;
 
-    return true;
+	result = m_NormalMapShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
+
 
 void ShaderManagerClass::Shutdown()
 {
-    // Release the normal map shader object.
-    if (m_NormalMapShader)
-    {
-        m_NormalMapShader->Shutdown();
-        delete m_NormalMapShader;
-        m_NormalMapShader = 0;
-    }
+	// Release the normal map shader object.
+	if (m_NormalMapShader)
+	{
+		m_NormalMapShader->Shutdown();
+		delete m_NormalMapShader;
+		m_NormalMapShader = 0;
+	}
 
-    // Release the light shader object.
-    if (m_LightShader)
-    {
-        m_LightShader->Shutdown();
-        delete m_LightShader;
-        m_LightShader = 0;
-    }
+	// Release the light shader object.
+	if (m_LightShader)
+	{
+		m_LightShader->Shutdown();
+		delete m_LightShader;
+		m_LightShader = 0;
+	}
 
-    // Release the texture shader object.
-    if (m_TextureShader)
-    {
-        m_TextureShader->Shutdown();
-        delete m_TextureShader;
-        m_TextureShader = 0;
-    }
+	// Release the texture shader object.
+	if (m_TextureShader)
+	{
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = 0;
+	}
 
-    return;
+	return;
 }
 
+
 bool ShaderManagerClass::RenderTextureShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture)
+	ID3D11ShaderResourceView* texture)
 {
-    bool result;
+	bool result;
 
 
-    result = m_TextureShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture);
-    if (!result)
-    {
-        return false;
-    }
+	result = m_TextureShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture);
+	if (!result)
+	{
+		return false;
+	}
 
-    return true;
+	return true;
 }
 
 
 bool ShaderManagerClass::RenderLightShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
+	ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
-    bool result;
+	bool result;
 
+	// Convert lightDirection to XMFLOAT4 array
+	XMFLOAT4 lightDirections[1];
+	lightDirections[0] = XMFLOAT4(lightDirection.x, lightDirection.y, lightDirection.z, 1.0f); // Assuming w = 1.0f for direction
 
-    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
-    if (!result)
-    {
-        return false;
-    }
+	XMFLOAT4 diffuseColors[1];
+	diffuseColors[0] = diffuseColor;
 
-    return true;
+	result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirections, diffuseColors);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 
 bool ShaderManagerClass::RenderNormalMapShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
+	ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
-    bool result;
+	bool result;
 
 
-    result = m_NormalMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, colorTexture, normalTexture, lightDirection, diffuseColor);
-    if (!result)
-    {
-        return false;
-    }
+	result = m_NormalMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, colorTexture, normalTexture, lightDirection, diffuseColor);
+	if (!result)
+	{
+		return false;
+	}
 
-    return true;
+	return true;
 }
