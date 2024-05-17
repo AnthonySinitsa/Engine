@@ -21,3 +21,5 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![fps](images/fps.png)
 ![2tex](images/2tex.png)
 ![lighmap](images/lightmap.png)
+![alphamap](images/alphamap.png)
+![normalmap](images/normalmap.png)

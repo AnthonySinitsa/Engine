@@ -81,6 +81,12 @@
     <ClCompile Include="lightmapshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="alphamapshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="normalmapshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -143,6 +149,12 @@
     <ClInclude Include="lightmapshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="alphamapshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="normalmapshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -181,5 +193,15 @@
     <None Include="lightmap.ps">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="alphamap.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="alphamap.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="normalmap.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="normalmap.ps" />
   </ItemGroup>
 </Project>
