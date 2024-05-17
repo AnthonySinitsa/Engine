@@ -22,3 +22,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![2tex](images/2tex.png)
 ![lighmap](images/lightmap.png)
 ![alphamap](images/alphamap.png)
+![normalmap](images/normalmap.png)
