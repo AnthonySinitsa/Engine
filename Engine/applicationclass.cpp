@@ -5,9 +5,9 @@ ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
-	m_SpecMapShader = 0;
 	m_Model = 0;
 	m_Light = 0;
+	m_ShaderManager = 0;
 }
 
 
@@ -23,7 +23,7 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128];
+	char modelFilename[128], textureFilename1[128], textureFilename2[128];
 	bool result;
 
 
@@ -40,31 +40,20 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the camera object.
 	m_Camera = new CameraClass;
 
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -8.0f);
 	m_Camera->Render();
 
-	// Create and initialize the specular map shader object.
-	m_SpecMapShader = new SpecMapShaderClass;
-
-	result = m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the specular map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "../Engine/data/cube.txt");
+	strcpy_s(modelFilename, "../Engine/data/sphere.txt");
 
 	// Set the file name of the textures.
-	strcpy_s(textureFilename1, "../Engine/data/stone02.tga");
-	strcpy_s(textureFilename2, "../Engine/data/normal02.tga");
-	strcpy_s(textureFilename3, "../Engine/data/spec02.tga");
+	strcpy_s(textureFilename1, "../Engine/data/stone01.tga");
+	strcpy_s(textureFilename2, "../Engine/data/normal01.tga");
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2);
 	if (!result)
 	{
 		return false;
@@ -75,8 +64,15 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(16.0f);
+
+	// Create and initialize the normal map shader object.
+	m_ShaderManager = new ShaderManagerClass;
+
+	result = m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -84,6 +80,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the shader manager object.
+	if (m_ShaderManager)
+	{
+		m_ShaderManager->Shutdown();
+		delete m_ShaderManager;
+		m_ShaderManager = 0;
+	}
+
 	// Release the light object.
 	if (m_Light)
 	{
@@ -97,14 +101,6 @@ void ApplicationClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-	}
-
-	// Release the specular map shader object.
-	if (m_SpecMapShader)
-	{
-		m_SpecMapShader->Shutdown();
-		delete m_SpecMapShader;
-		m_SpecMapShader = 0;
 	}
 
 	// Release the camera object.
@@ -158,7 +154,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix;
 	bool result;
 
 
@@ -170,15 +166,46 @@ bool ApplicationClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Rotate the world matrix by the rotation value so that the model will spin.
-	worldMatrix = XMMatrixRotationY(rotation);
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, 1.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the texture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-1.5f, -1.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the light shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderLightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(1.5f, -1.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Render the model using the normal map shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
-		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	result = m_ShaderManager->RenderNormalMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
