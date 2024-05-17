@@ -25,3 +25,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![normalmap](images/normalmap.png)
 ![specular](images/specular.png)
 ![manager](images/manager.png)
+![frustumculling](images/frustumculling.png)

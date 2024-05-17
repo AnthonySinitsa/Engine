@@ -93,6 +93,15 @@
     <ClCompile Include="shadermanagerclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="frustumclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="modellistclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="positionclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -165,6 +174,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shadermanagerclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="frustumclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modellistclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="positionclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
