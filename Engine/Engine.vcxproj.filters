@@ -108,6 +108,9 @@
     <ClCompile Include="displayplaneclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fogshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -197,6 +200,9 @@
     <ClInclude Include="displayplaneclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fogshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -251,6 +257,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="specmap.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="fog.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="fog.ps">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

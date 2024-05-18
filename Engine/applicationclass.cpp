@@ -6,9 +6,7 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_TextureShader = 0;
-	m_RenderTexture = 0;
-	m_DisplayPlane = 0;
+	m_FogShader = 0;
 }
 
 
@@ -60,31 +58,13 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the texture shader object.
-	m_TextureShader = new TextureShaderClass;
+	// Create and initialize the fog shader object.
+	m_FogShader = new FogShaderClass;
 
-	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_FogShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the render to texture object.
-	m_RenderTexture = new RenderTextureClass;
-
-	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the display plane object.
-	m_DisplayPlane = new DisplayPlaneClass;
-
-	result = m_DisplayPlane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
-	if (!result)
-	{
+		MessageBox(hwnd, L"Could not initialize the fog shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -94,28 +74,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	// Release the display plane object.
-	if (m_DisplayPlane)
+	// Release the fog shader object.
+	if (m_FogShader)
 	{
-		m_DisplayPlane->Shutdown();
-		delete m_DisplayPlane;
-		m_DisplayPlane = 0;
-	}
-
-	// Release the render to texture object.
-	if (m_RenderTexture)
-	{
-		m_RenderTexture->Shutdown();
-		delete m_RenderTexture;
-		m_RenderTexture = 0;
-	}
-
-	// Release the texture shader object.
-	if (m_TextureShader)
-	{
-		m_TextureShader->Shutdown();
-		delete m_TextureShader;
-		m_TextureShader = 0;
+		m_FogShader->Shutdown();
+		delete m_FogShader;
+		m_FogShader = 0;
 	}
 
 	// Release the model object.
@@ -164,15 +128,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 
-	// Render the scene to a render texture.
-	result = RenderSceneToTexture(rotation);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Render the final graphics scene.
-	result = Render();
+	// Render the graphics scene.
+	result = Render(rotation);
 	if (!result)
 	{
 		return false;
@@ -182,23 +139,27 @@ bool ApplicationClass::Frame(InputClass* Input)
 }
 
 
-bool ApplicationClass::RenderSceneToTexture(float rotation)
+bool ApplicationClass::Render(float rotation)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	float fogColor, fogStart, fogEnd;
 	bool result;
 
-	// Set the render target to be the render texture and clear it.
-	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
-	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
 
-	// Set the position of the camera for viewing the cube.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
-	m_Camera->Render();
+	// Set the color of the fog to grey.
+	fogColor = 0.5f;
 
-	// Get the matrices.
+	// Set the start and end of the fog.
+	fogStart = 0.0f;
+	fogEnd = 10.0f;
+
+	// Clear the buffers to begin the scene.
+	m_Direct3D->BeginScene(fogColor, fogColor, fogColor, 1.0f);
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
-	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
 	// Rotate the world matrix by the rotation value so that the cube will spin.
 	worldMatrix = XMMatrixRotationY(rotation);
@@ -206,69 +167,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	// Render the model using the texture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
-	m_Direct3D->SetBackBufferRenderTarget();
-	m_Direct3D->ResetViewport();
-
-	return true;
-}
-
-
-bool ApplicationClass::Render()
-{
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	bool result;
-
-
-	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Set the position of the camera for viewing the display planes with the render textures on them.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	// Setup matrices - Top display plane.
-	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
-
-	// Render the display plane using the texture shader and the render texture resource.
-	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Setup matrices - Bottom left display plane.
-	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
-
-	// Render the display plane using the texture shader and the render texture resource.
-	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Setup matrices - Bottom right display plane.
-	worldMatrix = XMMatrixTranslation(1.5f, -1.5f, 0.0f);
-
-	// Render the display plane using the texture shader and the render texture resource.
-	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	result = m_FogShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(), fogStart, fogEnd);
 	if (!result)
 	{
 		return false;

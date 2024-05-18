@@ -26,3 +26,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![manager](images/manager.png)
 ![frustumculling](images/frustumculling.png)
 ![rendertexture](images/rendertexture.png)
+![fog](images/fog.png)
