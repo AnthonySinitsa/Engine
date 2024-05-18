@@ -6,7 +6,7 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_FogShader = 0;
+	m_ClipPlaneShader = 0;
 }
 
 
@@ -43,7 +43,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render();
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "../Engine/data/cube.txt");
+	strcpy_s(modelFilename, "../Engine/data/sphere.txt");
 
 	// Set the file name of the texture.
 	strcpy_s(textureFilename, "../Engine/data/stone01.tga");
@@ -58,13 +58,13 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the fog shader object.
-	m_FogShader = new FogShaderClass;
+	// Create and initialize the clip plane shader object.
+	m_ClipPlaneShader = new ClipPlaneShaderClass;
 
-	result = m_FogShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_ClipPlaneShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the fog shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the clip plane shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -74,12 +74,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	// Release the fog shader object.
-	if (m_FogShader)
+	// Release the clip plane shader object.
+	if (m_ClipPlaneShader)
 	{
-		m_FogShader->Shutdown();
-		delete m_FogShader;
-		m_FogShader = 0;
+		m_ClipPlaneShader->Shutdown();
+		delete m_ClipPlaneShader;
+		m_ClipPlaneShader = 0;
 	}
 
 	// Release the model object.
@@ -142,19 +142,15 @@ bool ApplicationClass::Frame(InputClass* Input)
 bool ApplicationClass::Render(float rotation)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	float fogColor, fogStart, fogEnd;
+	XMFLOAT4 clipPlane;
 	bool result;
 
 
-	// Set the color of the fog to grey.
-	fogColor = 0.5f;
-
-	// Set the start and end of the fog.
-	fogStart = 0.0f;
-	fogEnd = 10.0f;
+	// Setup a clipping plane.
+	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
 
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(fogColor, fogColor, fogColor, 1.0f);
+	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
@@ -164,10 +160,11 @@ bool ApplicationClass::Render(float rotation)
 	// Rotate the world matrix by the rotation value so that the cube will spin.
 	worldMatrix = XMMatrixRotationY(rotation);
 
-	// Render the model using the texture shader.
+	// Render the model using the clip plane shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_FogShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(), fogStart, fogEnd);
+	result = m_ClipPlaneShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(), clipPlane);
 	if (!result)
 	{
 		return false;

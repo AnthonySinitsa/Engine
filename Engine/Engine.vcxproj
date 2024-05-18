@@ -23,6 +23,7 @@
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="clipplaneshadrclass.cpp" />
     <ClCompile Include="colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="displayplaneclass.cpp" />
@@ -56,6 +57,7 @@
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="clipplaneshaderclass.h" />
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="displayplaneclass.h" />
@@ -86,6 +88,8 @@
   <ItemGroup>
     <None Include="alphamap.ps" />
     <None Include="alphamap.vs" />
+    <None Include="clipplane.ps" />
+    <None Include="clipplane.vs" />
     <None Include="color.ps" />
     <None Include="color.vs" />
     <None Include="fog.ps" />
