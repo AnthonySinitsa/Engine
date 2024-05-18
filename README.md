@@ -4,7 +4,6 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 
 ## Progress
 
-![triangle](images/greenTriangle.png)
 ![square](images/redSquare.png)
 ![triangleBrick](images/triangleBrick.png)
 ![squareBrick](images/squareBrick.png)
@@ -27,3 +26,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![manager](images/manager.png)
 ![frustumculling](images/frustumculling.png)
 ![rendertexture](images/rendertexture.png)
+![fog](images/fog.png)
