@@ -25,6 +25,7 @@
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="displayplaneclass.cpp" />
     <ClCompile Include="fontclass.cpp" />
     <ClCompile Include="fontshaderclass.cpp" />
     <ClCompile Include="fpsclass.cpp" />
@@ -39,6 +40,7 @@
     <ClCompile Include="multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="rendertextureclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="spriteclass.cpp" />
@@ -55,6 +57,7 @@
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="displayplaneclass.h" />
     <ClInclude Include="fontclass.h" />
     <ClInclude Include="fontshaderclass.h" />
     <ClInclude Include="fpsclass.h" />
@@ -68,6 +71,7 @@
     <ClInclude Include="multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="positionclass.h" />
+    <ClInclude Include="rendertextureclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="spriteclass.h" />
