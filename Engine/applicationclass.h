@@ -12,7 +12,7 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "clipplaneshaderclass.h"
+#include "translateshaderclass.h"
 
 
 /////////////
@@ -45,7 +45,7 @@ private:
     D3DClass* m_Direct3D;
     CameraClass* m_Camera;
     ModelClass* m_Model;
-    ClipPlaneShaderClass* m_ClipPlaneShader;
+    TranslateShaderClass* m_TranslateShader;
 };
 
 #endif

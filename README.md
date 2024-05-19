@@ -28,3 +28,4 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![rendertexture](images/rendertexture.png)
 ![fog](images/fog.png)
 ![clipplane](images/clipplane.png)
+![translate](images/translate.gif)
