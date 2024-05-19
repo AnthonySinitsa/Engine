@@ -12,8 +12,9 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
+#include "rendertextureclass.h"
 #include "textureshaderclass.h"
-#include "transparentshaderclass.h"
+#include "reflectionshaderclass.h"
 
 
 /////////////
@@ -31,23 +32,26 @@ const float SCREEN_NEAR = 0.3f;
 class ApplicationClass
 {
 public:
-	ApplicationClass();
-	ApplicationClass(const ApplicationClass&);
-	~ApplicationClass();
+    ApplicationClass();
+    ApplicationClass(const ApplicationClass&);
+    ~ApplicationClass();
 
-	bool Initialize(int, int, HWND);
-	void Shutdown();
-	bool Frame(InputClass*);
-
-private:
-	bool Render();
+    bool Initialize(int, int, HWND);
+    void Shutdown();
+    bool Frame(InputClass*);
 
 private:
-	D3DClass* m_Direct3D;
-	CameraClass* m_Camera;
-	ModelClass* m_Model1, * m_Model2;
-	TextureShaderClass* m_TextureShader;
-	TransparentShaderClass* m_TransparentShader;
+    bool RenderReflectionToTexture(float);
+    bool Render(float);
+
+private:
+    D3DClass* m_Direct3D;
+    CameraClass* m_Camera;
+    ModelClass* m_CubeModel;
+    ModelClass* m_FloorModel;
+    RenderTextureClass* m_RenderTexture;
+    TextureShaderClass* m_TextureShader;
+    ReflectionShaderClass* m_ReflectionShader;
 };
 
 #endif
