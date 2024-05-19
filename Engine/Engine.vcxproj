@@ -23,6 +23,7 @@
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="clipplaneshadrclass.cpp" />
     <ClCompile Include="colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="displayplaneclass.cpp" />
@@ -50,12 +51,15 @@
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="timerclass.cpp" />
+    <ClCompile Include="translateshaderclass.cpp" />
+    <ClCompile Include="transparentshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphamapshaderclass.h" />
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="clipplaneshaderclass.h" />
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="displayplaneclass.h" />
@@ -82,10 +86,14 @@
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="timerclass.h" />
+    <ClInclude Include="translateshaderclass.h" />
+    <ClInclude Include="transparentshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="alphamap.ps" />
     <None Include="alphamap.vs" />
+    <None Include="clipplane.ps" />
+    <None Include="clipplane.vs" />
     <None Include="color.ps" />
     <None Include="color.vs" />
     <None Include="fog.ps" />
@@ -104,6 +112,10 @@
     <None Include="specmap.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
+    <None Include="translate.ps" />
+    <None Include="translate.vs" />
+    <None Include="transparent.ps" />
+    <None Include="transparent.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

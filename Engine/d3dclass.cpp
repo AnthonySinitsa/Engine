@@ -1,6 +1,5 @@
 #include "d3dclass.h"
-#include <fstream>
-#include <iostream>
+
 
 D3DClass::D3DClass()
 {
@@ -27,7 +26,9 @@ D3DClass::~D3DClass()
 {
 }
 
-bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+
+bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,
+	float screenDepth, float screenNear)
 {
 	HRESULT result;
 	IDXGIFactory* factory;
@@ -379,7 +380,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	// Create an alpha enabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
-	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 	blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 	blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 	blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
@@ -406,8 +407,6 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	return true;
 }
-
-
 
 
 void D3DClass::Shutdown()
@@ -488,10 +487,6 @@ void D3DClass::Shutdown()
 }
 
 
-
-// BeginScene will be called whenever we are going to draw a new 3D scene at the beginning of each frame. 
-// All it does is initializes the buffers so they are blank and ready to be drawn to. 
-// The other function is Endscene, it tells the swap chain to display our 3D scene once all the drawing has completed at the end of each frame.
 void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 {
 	float color[4];
@@ -531,8 +526,6 @@ void D3DClass::EndScene()
 }
 
 
-
-
 ID3D11Device* D3DClass::GetDevice()
 {
 	return m_device;
@@ -543,8 +536,6 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 {
 	return m_deviceContext;
 }
-
-
 
 
 void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
@@ -568,16 +559,12 @@ void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix)
 }
 
 
-
-
 void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
 {
 	strcpy_s(cardName, 128, m_videoCardDescription);
 	memory = m_videoCardMemory;
 	return;
 }
-
-
 
 
 void D3DClass::SetBackBufferRenderTarget()
@@ -597,6 +584,7 @@ void D3DClass::ResetViewport()
 	return;
 }
 
+
 void D3DClass::TurnZBufferOn()
 {
 	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
@@ -609,6 +597,7 @@ void D3DClass::TurnZBufferOff()
 	m_deviceContext->OMSetDepthStencilState(m_depthDisabledStencilState, 1);
 	return;
 }
+
 
 void D3DClass::EnableAlphaBlending()
 {
@@ -626,6 +615,7 @@ void D3DClass::EnableAlphaBlending()
 
 	return;
 }
+
 
 void D3DClass::DisableAlphaBlending()
 {
