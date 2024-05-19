@@ -5,10 +5,11 @@ ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
-	m_Model1 = 0;
-	m_Model2 = 0;
+	m_CubeModel = 0;
+	m_FloorModel = 0;
+	m_RenderTexture = 0;
 	m_TextureShader = 0;
-	m_TransparentShader = 0;
+	m_ReflectionShader = 0;
 }
 
 
@@ -24,7 +25,7 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	char modelFilename[128], textureFilename1[128], textureFilename2[128];
+	char modelFilename[128], textureFilename[128];
 	bool result;
 
 
@@ -34,39 +35,55 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
 		return false;
 	}
 
 	// Create and initialize the camera object.
 	m_Camera = new CameraClass;
 
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
-	// Set the file name of the model.
-	strcpy_s(modelFilename, "../Engine/data/square.txt");
+	// Set the file name of the cube model.
+	strcpy_s(modelFilename, "../Engine/data/cube.txt");
 
-	// Set the file names of the textures.
-	strcpy_s(textureFilename1, "../Engine/data/dirt01.tga");
-	strcpy_s(textureFilename2, "../Engine/data/stone01.tga");
+	// Set the file name of the texture.
+	strcpy_s(textureFilename, "../Engine/data/stone01.tga");
 
-	// Create and initialize the first model object that will use the dirt texture.
-	m_Model1 = new ModelClass;
+	// Create and initialize the cube model object.
+	m_CubeModel = new ModelClass;
 
-	result = m_Model1->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1);
+	result = m_CubeModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the cube model object.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Create and initialize the second model object that will use the stone texture.
-	m_Model2 = new ModelClass;
+	// Set the file name of the floor model.
+	strcpy_s(modelFilename, "../Engine/data/floor.txt");
 
-	result = m_Model2->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename2);
+	// Set the file name of the texture.
+	strcpy_s(textureFilename, "../Engine/data/blue01.tga");
+
+	// Create and initialize the floor model object.
+	m_FloorModel = new ModelClass;
+
+	result = m_FloorModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
 	if (!result)
 	{
+		MessageBox(hwnd, L"Could not initialize the floor model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create and initialize the render to texture object.
+	m_RenderTexture = new RenderTextureClass;
+
+	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the render texture object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -80,13 +97,13 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the transparent shader object.
-	m_TransparentShader = new TransparentShaderClass;
+	// Create and initialize the reflection shader object.
+	m_ReflectionShader = new ReflectionShaderClass;
 
-	result = m_TransparentShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_ReflectionShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the transparent shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the reflection shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -96,12 +113,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	// Release the transparent shader object.
-	if (m_TransparentShader)
+	// Release the reflection shader object.
+	if (m_ReflectionShader)
 	{
-		m_TransparentShader->Shutdown();
-		delete m_TransparentShader;
-		m_TransparentShader = 0;
+		m_ReflectionShader->Shutdown();
+		delete m_ReflectionShader;
+		m_ReflectionShader = 0;
 	}
 
 	// Release the texture shader object.
@@ -112,20 +129,28 @@ void ApplicationClass::Shutdown()
 		m_TextureShader = 0;
 	}
 
-	// Release the model object.
-	if (m_Model2)
+	// Release the render texture object.
+	if (m_RenderTexture)
 	{
-		m_Model2->Shutdown();
-		delete m_Model2;
-		m_Model2 = 0;
+		m_RenderTexture->Shutdown();
+		delete m_RenderTexture;
+		m_RenderTexture = 0;
 	}
 
-	// Release the model object.
-	if (m_Model1)
+	// Release the floor model object.
+	if (m_FloorModel)
 	{
-		m_Model1->Shutdown();
-		delete m_Model1;
-		m_Model1 = 0;
+		m_FloorModel->Shutdown();
+		delete m_FloorModel;
+		m_FloorModel = 0;
+	}
+
+	// Release the cube model object.
+	if (m_CubeModel)
+	{
+		m_CubeModel->Shutdown();
+		delete m_CubeModel;
+		m_CubeModel = 0;
 	}
 
 	// Release the camera object.
@@ -149,6 +174,7 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame(InputClass* Input)
 {
+	static float rotation = 0.0f;
 	bool result;
 
 
@@ -158,8 +184,22 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
-	// Render the graphics scene.
-	result = Render();
+	// Update the rotation variable each frame.
+	rotation -= 0.0174532925f * 0.25f;
+	if (rotation < 0.0f)
+	{
+		rotation += 360.0f;
+	}
+
+	// Render the entire scene as a reflection to the texture first.
+	result = RenderReflectionToTexture(rotation);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Render the final graphics scene to the back buffer.
+	result = Render(rotation);
 	if (!result)
 	{
 		return false;
@@ -169,15 +209,51 @@ bool ApplicationClass::Frame(InputClass* Input)
 }
 
 
-bool ApplicationClass::Render()
+bool ApplicationClass::RenderReflectionToTexture(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	float blendAmount;
+	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
 	bool result;
 
 
-	// Set the blending amount to 50%.
-	blendAmount = 0.5f;
+	// Set the render target to be the render to texture and clear it.
+	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Use the camera to calculate the reflection matrix.
+	m_Camera->RenderReflection(-1.5f);
+
+	// Get the camera reflection view matrix instead of the normal view matrix.
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+
+	// Get the world and projection matrices.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Rotate the world matrix by the rotation value so that the cube will spin.
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Render the cube model using the texture shader and the reflection view matrix.
+	m_CubeModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_CubeModel->GetIndexCount(), worldMatrix, reflectionViewMatrix, projectionMatrix, m_CubeModel->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
+
+
+bool ApplicationClass::Render(float rotation)
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, reflectionViewMatrix;
+	bool result;
+
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -187,32 +263,33 @@ bool ApplicationClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Render the first model that is using the dirt texture using the regular texture shader.
-	m_Model1->Render(m_Direct3D->GetDeviceContext());
+	// Rotate the world matrix by the rotation value so that the cube will spin.
+	worldMatrix = XMMatrixRotationY(rotation);
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model1->GetTexture());
+	// Render the cube model using the texture shader and the regular view matrix.
+	m_CubeModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_CubeModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_CubeModel->GetTexture());
 	if (!result)
 	{
 		return false;
 	}
 
-	// Translate to the right by one unit and towards the camera by one unit.
-	worldMatrix = XMMatrixTranslation(1.0f, 0.0f, -1.0f);
+	// Now get the world matrix again and translate down for the floor model to render underneath the cube.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	worldMatrix = XMMatrixTranslation(0.0f, -1.5f, 0.0f);
 
-	// Turn on alpha blending for the transparency to work.
-	m_Direct3D->EnableAlphaBlending();
+	// Get the camera reflection view matrix for the reflection shader.
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 
-	// Render the second square model with the stone texture and use the 50% blending amount for transparency.
-	m_Model2->Render(m_Direct3D->GetDeviceContext());
+	// Render the floor model using the reflection shader, reflection render texture, and reflection view matrix.
+	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model2->GetTexture(), blendAmount);
+	result = m_ReflectionShader->Render(m_Direct3D->GetDeviceContext(), m_FloorModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_FloorModel->GetTexture(), m_RenderTexture->GetShaderResourceView(), reflectionViewMatrix);
 	if (!result)
 	{
 		return false;
 	}
-
-	// Turn off alpha blending.
-	m_Direct3D->DisableAlphaBlending();
 
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();

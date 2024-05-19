@@ -42,6 +42,7 @@
     <ClCompile Include="multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
@@ -77,6 +78,7 @@
     <ClInclude Include="multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="positionclass.h" />
+    <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="specmapshaderclass.h" />
@@ -108,6 +110,8 @@
     <None Include="multitexture.vs" />
     <None Include="normalmap.ps" />
     <None Include="normalmap.vs" />
+    <None Include="reflection.ps" />
+    <None Include="reflection.vs" />
     <None Include="specmap.ps" />
     <None Include="specmap.vs" />
     <None Include="texture.ps" />
