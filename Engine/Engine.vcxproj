@@ -52,6 +52,7 @@
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="timerclass.cpp" />
     <ClCompile Include="translateshaderclass.cpp" />
+    <ClCompile Include="transparentshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphamapshaderclass.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="timerclass.h" />
     <ClInclude Include="translateshaderclass.h" />
+    <ClInclude Include="transparentshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="alphamap.ps" />
@@ -112,6 +114,8 @@
     <None Include="texture.vs" />
     <None Include="translate.ps" />
     <None Include="translate.vs" />
+    <None Include="transparent.ps" />
+    <None Include="transparent.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
