@@ -135,6 +135,9 @@
     <ClCompile Include="fireshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="depthshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -251,6 +254,9 @@
     <ClInclude Include="fireshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="depthshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -359,6 +365,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="fire.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="depth.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="depth.ps">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

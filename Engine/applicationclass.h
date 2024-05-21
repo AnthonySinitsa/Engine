@@ -12,17 +12,17 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "textureshaderclass.h"
-#include "positionclass.h"
-#include "timerclass.h"
+#include "depthshaderclass.h"
+
 
 /////////////
 // GLOBALS //
 /////////////
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.3f;
+
+const float SCREEN_DEPTH = 100.0f;
+const float SCREEN_NEAR = 1.0f;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,10 +45,8 @@ private:
 private:
     D3DClass* m_Direct3D;
     CameraClass* m_Camera;
-    TextureShaderClass* m_TextureShader;
-    ModelClass* m_FloorModel, * m_BillboardModel;
-    PositionClass* m_Position;
-    TimerClass* m_Timer;
+    ModelClass* m_Model;
+    DepthShaderClass* m_DepthShader;
 };
 
 #endif
