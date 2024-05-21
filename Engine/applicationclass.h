@@ -12,9 +12,11 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
+#include "lightclass.h"
 #include "rendertextureclass.h"
-#include "textureshaderclass.h"
-#include "reflectionshaderclass.h"
+#include "lightshaderclass.h"
+#include "refractionshaderclass.h"
+#include "watershaderclass.h"
 
 
 /////////////
@@ -41,17 +43,20 @@ public:
     bool Frame(InputClass*);
 
 private:
-    bool RenderReflectionToTexture(float);
-    bool Render(float);
+    bool RenderRefractionToTexture();
+    bool RenderReflectionToTexture();
+    bool Render();
 
 private:
     D3DClass* m_Direct3D;
     CameraClass* m_Camera;
-    ModelClass* m_CubeModel;
-    ModelClass* m_FloorModel;
-    RenderTextureClass* m_RenderTexture;
-    TextureShaderClass* m_TextureShader;
-    ReflectionShaderClass* m_ReflectionShader;
+    ModelClass* m_GroundModel, * m_WallModel, * m_BathModel, * m_WaterModel;
+    LightClass* m_Light;
+    RenderTextureClass* m_RefractionTexture, * m_ReflectionTexture;
+    LightShaderClass* m_LightShader;
+    RefractionShaderClass* m_RefractionShader;
+    WaterShaderClass* m_WaterShader;
+    float m_waterHeight, m_waterTranslation;
 };
 
 #endif
