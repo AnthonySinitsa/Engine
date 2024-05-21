@@ -43,6 +43,7 @@
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="reflectionshaderclass.cpp" />
+    <ClCompile Include="refractionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="timerclass.cpp" />
     <ClCompile Include="translateshaderclass.cpp" />
     <ClCompile Include="transparentshaderclass.cpp" />
+    <ClCompile Include="watershaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphamapshaderclass.h" />
@@ -79,6 +81,7 @@
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
+    <ClInclude Include="refractionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="specmapshaderclass.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="timerclass.h" />
     <ClInclude Include="translateshaderclass.h" />
     <ClInclude Include="transparentshaderclass.h" />
+    <ClInclude Include="watershaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="alphamap.ps" />
@@ -112,6 +116,8 @@
     <None Include="normalmap.vs" />
     <None Include="reflection.ps" />
     <None Include="reflection.vs" />
+    <None Include="refraction.ps" />
+    <None Include="refraction.vs" />
     <None Include="specmap.ps" />
     <None Include="specmap.vs" />
     <None Include="texture.ps" />
@@ -120,6 +126,8 @@
     <None Include="translate.vs" />
     <None Include="transparent.ps" />
     <None Include="transparent.vs" />
+    <None Include="water.ps" />
+    <None Include="water.vs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
