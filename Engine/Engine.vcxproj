@@ -26,6 +26,7 @@
     <ClCompile Include="clipplaneshadrclass.cpp" />
     <ClCompile Include="colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="depthshaderclass.cpp" />
     <ClCompile Include="displayplaneclass.cpp" />
     <ClCompile Include="fireshaderclass.cpp" />
     <ClCompile Include="fogshaderclass.cpp" />
@@ -67,6 +68,7 @@
     <ClInclude Include="clipplaneshaderclass.h" />
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="depthshaderclass.h" />
     <ClInclude Include="displayplaneclass.h" />
     <ClInclude Include="fireshaderclass.h" />
     <ClInclude Include="fogshaderclass.h" />
@@ -106,6 +108,8 @@
     <None Include="clipplane.vs" />
     <None Include="color.ps" />
     <None Include="color.vs" />
+    <None Include="depth.ps" />
+    <None Include="depth.vs" />
     <None Include="fire.ps" />
     <None Include="fire.vs" />
     <None Include="fog.ps" />
