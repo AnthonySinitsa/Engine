@@ -129,6 +129,9 @@
     <ClCompile Include="refractionshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="glassshaderclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -239,6 +242,9 @@
     <ClInclude Include="refractionshaderclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="glassshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="color.vs">
@@ -335,6 +341,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="refraction.ps">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="glass.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="glass.ps">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

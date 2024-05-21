@@ -12,12 +12,9 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "lightclass.h"
 #include "rendertextureclass.h"
-#include "lightshaderclass.h"
-#include "refractionshaderclass.h"
-#include "watershaderclass.h"
-
+#include "textureshaderclass.h"
+#include "glassshaderclass.h"
 
 /////////////
 // GLOBALS //
@@ -43,20 +40,17 @@ public:
     bool Frame(InputClass*);
 
 private:
-    bool RenderRefractionToTexture();
-    bool RenderReflectionToTexture();
-    bool Render();
+    bool RenderSceneToTexture(float);
+    bool Render(float);
 
 private:
     D3DClass* m_Direct3D;
     CameraClass* m_Camera;
-    ModelClass* m_GroundModel, * m_WallModel, * m_BathModel, * m_WaterModel;
-    LightClass* m_Light;
-    RenderTextureClass* m_RefractionTexture, * m_ReflectionTexture;
-    LightShaderClass* m_LightShader;
-    RefractionShaderClass* m_RefractionShader;
-    WaterShaderClass* m_WaterShader;
-    float m_waterHeight, m_waterTranslation;
+    ModelClass* m_Model;
+    ModelClass* m_WindowModel;
+    RenderTextureClass* m_RenderTexture;
+    TextureShaderClass* m_TextureShader;
+    GlassShaderClass* m_GlassShader;
 };
 
 #endif
