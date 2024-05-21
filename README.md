@@ -33,5 +33,6 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 ![reflection](images/reflection.png)
 ![water](images/water.png)
 ![glass](images/glass.png)
-![ice](images/ice.png)]
+![ice](images/ice.png)
 ![fire](images/fire.png)
+![billboard](images/billboard.png)

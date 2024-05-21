@@ -12,8 +12,9 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "fireshaderclass.h"
-
+#include "textureshaderclass.h"
+#include "positionclass.h"
+#include "timerclass.h"
 
 /////////////
 // GLOBALS //
@@ -44,8 +45,10 @@ private:
 private:
     D3DClass* m_Direct3D;
     CameraClass* m_Camera;
-    ModelClass* m_Model;
-    FireShaderClass* m_FireShader;
+    TextureShaderClass* m_TextureShader;
+    ModelClass* m_FloorModel, * m_BillboardModel;
+    PositionClass* m_Position;
+    TimerClass* m_Timer;
 };
 
 #endif

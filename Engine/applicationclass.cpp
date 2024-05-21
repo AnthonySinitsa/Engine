@@ -5,8 +5,11 @@ ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
-	m_Model = 0;
-	m_FireShader = 0;
+	m_TextureShader = 0;
+	m_FloorModel = 0;
+	m_BillboardModel = 0;
+	m_Position = 0;
+	m_Timer = 0;
 }
 
 
@@ -22,7 +25,7 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128];
+	char modelFilename[128], textureFilename[128];
 	bool result;
 
 
@@ -42,33 +45,51 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 	m_Camera->Render();
 
-	// Set the file name of the model.
+	// Create and initialize the texture shader object.
+	m_TextureShader = new TextureShaderClass;
+
+	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the filenames for the floor model object.
+	strcpy_s(modelFilename, "../Engine/data/floor.txt");
+	strcpy_s(textureFilename, "../Engine/data/grid01.tga");
+
+	// Create and initialize the floor model object.
+	m_FloorModel = new ModelClass;
+
+	result = m_FloorModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the floor model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the filenames for the billboard model object.
 	strcpy_s(modelFilename, "../Engine/data/square.txt");
+	strcpy_s(textureFilename, "../Engine/data/stone01.tga");
 
-	// Set the file name of the textures for the model.
-	strcpy_s(textureFilename1, "../Engine/data/fire01.tga");
-	strcpy_s(textureFilename2, "../Engine/data/noise01.tga");
-	strcpy_s(textureFilename3, "../Engine/data/alpha01.tga");
+	// Create and initialize the billboard model object.
+	m_BillboardModel = new ModelClass;
 
-	// Create and initialize the model object.
-	m_Model = new ModelClass;
-
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3);
+	result = m_BillboardModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the billboard model object.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Create and initialize the fire shader object.
-	m_FireShader = new FireShaderClass;
+	// Create the position object and set the initial viewing position.
+	m_Position = new PositionClass;
+	m_Position->SetPosition(0.0f, 1.5f, -11.0f);
 
-	result = m_FireShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the fire shader object.", L"Error", MB_OK);
-		return false;
-	}
+	// Create and initialize the timer object.
+	m_Timer = new TimerClass;
+	m_Timer->Initialize();
 
 	return true;
 }
@@ -76,20 +97,42 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	// Release the fire shader object.
-	if (m_FireShader)
+	// Release the timer object.
+	if (m_Timer)
 	{
-		m_FireShader->Shutdown();
-		delete m_FireShader;
-		m_FireShader = 0;
+		delete m_Timer;
+		m_Timer = 0;
 	}
 
-	// Release the model object.
-	if (m_Model)
+	// Release the position object.
+	if (m_Position)
 	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
+		delete m_Position;
+		m_Position = 0;
+	}
+
+	// Release the billboard model object.
+	if (m_BillboardModel)
+	{
+		m_BillboardModel->Shutdown();
+		delete m_BillboardModel;
+		m_BillboardModel = 0;
+	}
+
+	// Release the floor model object.
+	if (m_FloorModel)
+	{
+		m_FloorModel->Shutdown();
+		delete m_FloorModel;
+		m_FloorModel = 0;
+	}
+
+	// Release the texture shader object.
+	if (m_TextureShader)
+	{
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = 0;
 	}
 
 	// Release the camera object.
@@ -113,14 +156,35 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame(InputClass* Input)
 {
-	bool result;
+	float positionX, positionY, positionZ;
+	bool result, keyDown;
 
+
+	// Update the system stats.
+	m_Timer->Frame();
 
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
 	{
 		return false;
 	}
+
+	// Set the frame time for calculating the updated position.
+	m_Position->SetFrameTime(m_Timer->GetTime());
+
+	// Check if the user is pressing the left or right arrow keys and update the position object accordingly.
+	keyDown = Input->IsLeftArrowPressed();
+	m_Position->MoveLeft(keyDown);
+
+	keyDown = Input->IsRightArrowPressed();
+	m_Position->MoveRight(keyDown);
+
+	// Get the current view point position
+	m_Position->GetPosition(positionX, positionY, positionZ);
+
+	// Set the position of the camera.
+	m_Camera->SetPosition(positionX, positionY, positionZ);
+	m_Camera->Render();
 
 	// Render the graphics scene.
 	result = Render();
@@ -135,35 +199,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 bool ApplicationClass::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	XMFLOAT3 scrollSpeeds, scales;
-	XMFLOAT2 distortion1, distortion2, distortion3;
-	float distortionScale, distortionBias;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, translateMatrix;
+	XMFLOAT3 cameraPosition, modelPosition;
+	double angle;
+	float pi, rotation;
 	bool result;
-	static float frameTime = 0.0f;
 
-
-	// Increment the frame time counter.
-	frameTime += 0.01f;
-	if (frameTime > 1000.0f)
-	{
-		frameTime = 0.0f;
-	}
-
-	// Set the three scrolling speeds for the three different noise textures.
-	scrollSpeeds = XMFLOAT3(1.3f, 2.1f, 2.3f);
-
-	// Set the three scales which will be used to create the three different noise octave textures.
-	scales = XMFLOAT3(1.0f, 2.0f, 3.0f);
-
-	// Set the three different x and y distortion factors for the three different noise textures.
-	distortion1 = XMFLOAT2(0.1f, 0.2f);
-	distortion2 = XMFLOAT2(0.1f, 0.3f);
-	distortion3 = XMFLOAT2(0.1f, 0.1f);
-
-	// The the scale and bias of the texture coordinate sampling perturbation.
-	distortionScale = 0.8f;
-	distortionBias = 0.5f;
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -173,22 +214,47 @@ bool ApplicationClass::Render()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Turn on alpha blending for the fire transparency.
-	m_Direct3D->EnableAlphaBlending();
+	// Put the floor model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_FloorModel->Render(m_Direct3D->GetDeviceContext());
 
-	// Render the cube model using the texture shader.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_FireShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		m_Model->GetTexture(1), m_Model->GetTexture(2), frameTime, scrollSpeeds, scales, distortion1, distortion2, distortion3,
-		distortionScale, distortionBias);
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_FloorModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_FloorModel->GetTexture());
 	if (!result)
 	{
 		return false;
 	}
 
-	// Turn off alpha blending.
-	m_Direct3D->DisableAlphaBlending();
+	// Get the position of the camera.
+	cameraPosition = m_Camera->GetPosition();
+
+	// Set the position of the billboard model.
+	modelPosition.x = 0.0f;
+	modelPosition.y = 1.5f;
+	modelPosition.z = 0.0f;
+
+	// Calculate the rotation angle that needs to be applied to the billboard model to face the current camera position using the arc tangent function.
+	pi = 3.14159265358979323846f;
+	angle = atan2(modelPosition.x - cameraPosition.x, modelPosition.y - cameraPosition.z) * (180.0f / pi);
+
+	// Convert rotation angle into radians.
+	rotation = (float)angle * 0.0174532925f;
+
+	// Setup the rotation the billboard at the origin using the world matrix.
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Setup the translation matrix from the billboard model.
+	translateMatrix = XMMatrixTranslation(modelPosition.x, modelPosition.y, modelPosition.z);
+
+	// Finally combine the rotation and translation matrices to create the final world matrix for the billboard model.
+	worldMatrix = XMMatrixMultiply(worldMatrix, translateMatrix);
+
+	// Put the floor model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_BillboardModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_BillboardModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_BillboardModel->GetTexture());
+	if (!result)
+	{
+		return false;
+	}
 
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
