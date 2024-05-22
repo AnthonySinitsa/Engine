@@ -114,6 +114,7 @@ This is a graphics engine being built from scratch following RasterTek tutorials
 
 ![glass](images/glass.png)
 ![ice](images/ice.png)
+
 ## Fire
 
 ![fire](images/fire.png)
