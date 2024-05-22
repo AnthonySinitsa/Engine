@@ -44,6 +44,7 @@
     <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
+    <ClCompile Include="planeshaderclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="refractionshaderclass.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="modellistclass.h" />
     <ClInclude Include="multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
+    <ClInclude Include="planeshaderclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="refractionshaderclass.h" />
@@ -126,6 +128,8 @@
     <None Include="multitexture.vs" />
     <None Include="normalmap.ps" />
     <None Include="normalmap.vs" />
+    <None Include="plane.ps" />
+    <None Include="plane.vs" />
     <None Include="reflection.ps" />
     <None Include="reflection.vs" />
     <None Include="refraction.ps" />
